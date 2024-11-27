@@ -5,8 +5,9 @@ import axios from 'axios';
 
 
 const api = axios.create({
-  baseURL: 'https://monis-foods-backend.vercel.app',
-  // Remove withCredentials: true
+  baseURL: 'https://phonebazaar.shop',
+  withCredentials: true,
+  // baseURL: 'https://monis-foods-backend.vercel.app',
   headers: {
     'Content-Type': 'application/json',
 }
