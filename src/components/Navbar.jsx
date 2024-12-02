@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import { logout } from '../redux/reducers/user/authSlice';
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+// import logo from '../../assets/monis_logo1.png'
+import logo from '../assets/monis_logo1.png'
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -29,10 +31,18 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="bg-gray-800 text-white p-4 fixed w-full z-10 top-0 left-0 shadow-lg">
+      <nav className="bg-[#eb671c] text-white p-4 fixed w-full z-10 top-0 left-0 shadow-lg">
         <div className="flex justify-between items-center">
-          <div className="text-2xl font-semibold">Monis Foods</div>
-          
+          {/* Logo Section */}
+          <div className="flex items-center space-x-3">
+            <img
+              src={logo} // Replace with the actual path to your logo
+              alt="Monis Foods Logo"
+              className="h-12 w-12"
+            />
+            <span className="text-2xl font-semibold">Monis Foods</span>
+          </div>
+
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-6">
             {isAuthenticated ? (

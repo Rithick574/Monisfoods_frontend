@@ -10,10 +10,10 @@ const Login = () => {
   const userRole = useSelector((state) => state.auth.role);
   const authError = useSelector((state) => state.auth.error);
 
-  const [mobileNumber, setMobileNumber] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [showCredentials, setShowCredentials] = useState(false);
+  //const [showCredentials, setShowCredentials] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -27,43 +27,43 @@ const Login = () => {
 
   const handlePasswordLogin = async () => {
     try {
-      await dispatch(loginUser({ mobileNumber, password }));
+      await dispatch(loginUser({ email, password }));
     } catch (err) {
       setError('Login failed! Please check your credentials.');
     }
   };
 
-  const TestCredentials = () => (
-    <div className="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="text-sm font-semibold text-gray-700">Test Credentials</h3>
-        <button
-          onClick={() => setShowCredentials(!showCredentials)}
-          className="text-xs text-blue-500 hover:text-blue-700"
-        >
-          {showCredentials ? 'Hide' : 'Show'}
-        </button>
-      </div>
-      {showCredentials && (
-        <div className="space-y-4">
-          <div>
-            <h4 className="text-sm font-medium text-gray-600 mb-2">User Account</h4>
-            <div className="text-sm space-y-1">
-              <p className="text-gray-600">Mobile: <span className="font-mono">9539285746</span></p>
-              <p className="text-gray-600">Password: <span className="font-mono">1234</span></p>
-            </div>
-          </div>
-          <div>
-            <h4 className="text-sm font-medium text-gray-600 mb-2">Admin Account</h4>
-            <div className="text-sm space-y-1">
-              <p className="text-gray-600">Mobile: <span className="font-mono">9539285744</span></p>
-              <p className="text-gray-600">Password: <span className="font-mono">1234</span></p>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+  // const TestCredentials = () => (
+  //   <div className="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+  //     <div className="flex justify-between items-center mb-2">
+  //       <h3 className="text-sm font-semibold text-gray-700">Test Credentials</h3>
+  //       <button
+  //         onClick={() => setShowCredentials(!showCredentials)}
+  //         className="text-xs text-blue-500 hover:text-blue-700"
+  //       >
+  //         {showCredentials ? 'Hide' : 'Show'}
+  //       </button>
+  //     </div>
+  //     {showCredentials && (
+  //       <div className="space-y-4">
+  //         <div>
+  //           <h4 className="text-sm font-medium text-gray-600 mb-2">User Account</h4>
+  //           <div className="text-sm space-y-1">
+  //             <p className="text-gray-600">Mobile: <span className="font-mono">9539285746</span></p>
+  //             <p className="text-gray-600">Password: <span className="font-mono">1234</span></p>
+  //           </div>
+  //         </div>
+  //         <div>
+  //           <h4 className="text-sm font-medium text-gray-600 mb-2">Admin Account</h4>
+  //           <div className="text-sm space-y-1">
+  //             <p className="text-gray-600">Mobile: <span className="font-mono">9539285744</span></p>
+  //             <p className="text-gray-600">Password: <span className="font-mono">1234</span></p>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     )}
+  //   </div>
+  // );
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
@@ -72,10 +72,10 @@ const Login = () => {
         <div className="space-y-4">
           <div className="relative">
             <input
-              type="tel"
-              placeholder="Mobile Number"
-              value={mobileNumber}
-              onChange={(e) => setMobileNumber(e.target.value)}
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
           </div>
@@ -106,7 +106,7 @@ const Login = () => {
               </Link>
             </p>
           </div>
-          <TestCredentials />
+          {/* <TestCredentials /> */}
         </div>
       </div>
     </div>

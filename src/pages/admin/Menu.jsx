@@ -5,6 +5,7 @@ import Sidebar from '../../components/Admin/Sidebar';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { baseURL } from '../../common/api';
 
 const AddMenu = () => {
   const [menuType, setMenuType] = useState('daily');
@@ -36,7 +37,7 @@ const AddMenu = () => {
 
   useEffect(() => {
     if (menuType === 'daily') {
-      axios.get(`https://monis-foods-backend.vercel.app/api/admin/daily-menu/${date}`)
+      axios.get(`${baseURL}/api/admin/daily-menu/${date}`)
         .then((response) => {
           if (response.data && response.data.meals) {
             setDailyMeals(response.data.meals);
@@ -100,7 +101,7 @@ const AddMenu = () => {
 
   const fetchWeeklyMenu = async (startDate, endDate) => {
     try {
-      const response = await axios.get(`https://monis-foods-backend.vercel.app/api/admin/weekly-menu`, {
+      const response = await axios.get(`${baseURL}/api/admin/weekly-menu`, {
         params: { startDate, endDate }
       });
       
@@ -185,7 +186,7 @@ const AddMenu = () => {
   }
 
   useEffect(() => {
-    axios.get('https://monis-foods-backend.vercel.app/api/admin/menu-items')
+    axios.get(`${baseURL}/api/admin/menu-items`)
       .then((response) => {
         console.log(response.data, "items")
         setAvailableItems(response.data);
@@ -268,7 +269,7 @@ const AddMenu = () => {
           snack: dailyMeals.snack.map(item => item._id)
         };
   
-        await axios.post('https://monis-foods-backend.vercel.app/api/admin/daily-menu', {
+        await axios.post(`${baseURL}/api/admin/daily-menu`, {
           date,
           meals: formattedMeals
         });
@@ -292,7 +293,7 @@ const AddMenu = () => {
           };
         });
   
-        await axios.post('https://monis-foods-backend.vercel.app/api/admin/weekly-menu', {
+        await axios.post(`${baseURL}/api/admin/weekly-menu`, {
           startDate: weekRange.startDate,
           endDate: weekRange.endDate,
           meals: formattedWeeklyMeals

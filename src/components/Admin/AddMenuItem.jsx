@@ -3,6 +3,8 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { baseURL } from '../../common/api';
+
 const AddAvailableItem = () => {
   const [newItem, setNewItem] = useState({
     name: '',
@@ -41,7 +43,7 @@ const AddAvailableItem = () => {
       toast.error('Name and Description are required!');
       return;
     }
-    axios.post('https://monis-foods-backend.vercel.app/api/admin/menu-item', newItem)
+    axios.post(`${baseURL}/api/admin/menu-item`, newItem)
       .then(() => {
         toast.success('Item added successfully!');
         setNewItem({

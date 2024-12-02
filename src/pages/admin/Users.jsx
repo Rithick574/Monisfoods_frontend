@@ -3,6 +3,7 @@ import axios from 'axios';
 import Sidebar from '../../components/Admin/Sidebar';
 import { MdDelete } from "react-icons/md";
 import { FaPencilAlt } from "react-icons/fa";
+import { baseURL } from '../../common/api';
 
 const UsersPage = () => {
   const [students, setStudents] = useState([]);
@@ -17,7 +18,7 @@ const UsersPage = () => {
     try {
       setLoading(true);
 
-      const response = await axios.get(`https://monis-foods-backend.vercel.app/api/admin/users?page=${currentPage}&limit=${limit}`);
+      const response = await axios.get(`${baseURL}/api/admin/users?page=${currentPage}&limit=${limit}`);
       const { students, teachers } = response.data;
 
       setStudents(students.data);
@@ -42,7 +43,7 @@ const UsersPage = () => {
   const saveEdit = async () => {
     try {
       const { type, ...userData } = editData;
-      await axios.put(`https://monis-foods-backend.vercel.app/api/admin/${type}/${editData._id}`, userData);
+      await axios.put(`${baseURL}/api/admin/${type}/${editData._id}`, userData);
       fetchUsers();
       setEditData(null);
     } catch (err) {
@@ -55,7 +56,7 @@ const UsersPage = () => {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
 
     try {
-      await axios.delete(`https://monis-foods-backend.vercel.app/api/admin/${type}/${id}`);
+      await axios.delete(`${baseURL}/api/admin/${type}/${id}`);
       fetchUsers(); 
     } catch (err) {
       console.error('Error deleting user:', err);
@@ -73,10 +74,10 @@ const UsersPage = () => {
     <div className="flex">
       <Sidebar />
       <div className="flex-grow p-8 bg-gray-100 min-h-screen">
-        <h2 className="text-xl font-bold mb-4">Students</h2>
+        <h2 className="text-xl font-bold text-center mb-4 ">Students</h2>
         <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md mb-6">
           <thead>
-            <tr className="bg-gray-200 text-left">
+            <tr className="bg-[#eb671c] text-left">
               <th className="px-4 py-2 border-b">Name</th>
               <th className="px-4 py-2 border-b">Class</th>
               <th className="px-4 py-2 border-b">School</th>
@@ -108,10 +109,10 @@ const UsersPage = () => {
           </tbody>
         </table>
 
-        <h2 className="text-xl font-bold mt-8 mb-4">Teachers</h2>
+        <h2 className="text-xl font-bold text-center mt-8 mb-4">Teachers</h2>
         <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
           <thead>
-            <tr className="bg-gray-200 text-left">
+            <tr className="bg-[#eb671c] text-left">
               <th className="px-4 py-2 border-b">Mobile</th>
               <th className="px-4 py-2 border-b">Name</th>
               <th className="px-4 py-2 border-b">Email</th>

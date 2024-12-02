@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-
+import { baseURL } from '../../common/api';
 const Profile = () => {
   const userId = useSelector((state) => state.auth.user); 
   const [formData, setFormData] = useState({
@@ -17,7 +17,7 @@ const Profile = () => {
 
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`https://monis-foods-backend.vercel.app/api/user/${userId}`);
+        const response = await axios.get(`${baseURL}/api/user/${userId}`);
         const { mobileNumber, name, email, address } = response.data;
         setFormData({ mobileNumber, name, email, address });
         setIsLoading(false);
@@ -43,7 +43,7 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`https://monis-foods-backend.vercel.app/api/user/${userId}`, formData);
+      const response = await axios.put(`${baseURL}/api/user/${userId}`, formData);
       console.log('Personal details updated:', response.data);
       setIsSubmitted(true);
 
@@ -71,11 +71,11 @@ const Profile = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         
         <div>
-          <label className="block text-sm font-medium text-gray-600">Mobile Number</label>
+          <label className="block text-sm font-medium text-gray-600">Email</label>
           <input
             type="text"
-            name="mobileNumber"
-            value={formData.mobileNumber}
+            name="email"
+            value={formData.email}
             readOnly
             className="mt-1 block w-full p-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
           />
@@ -87,7 +87,7 @@ const Profile = () => {
           <input
             type="text"
             name="name"
-            value={formData.name.toUpperCase()}
+            value={formData.name}
             onChange={handleChange}
             className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             placeholder="Enter your name"
@@ -99,9 +99,9 @@ const Profile = () => {
         <div>
           <label className="block text-sm font-medium text-gray-600">Email</label>
           <input
-            type="email"
-            name="email"
-            value={formData.email}
+            type="text"
+            name="mobileNumber"
+            value={formData.mobileNumber}
             onChange={handleChange}
             className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             placeholder="Enter your email"

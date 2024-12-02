@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-"scripts": {
+  "scripts": {
     "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview"
@@ -16,8 +16,10 @@
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.7",
     "chart.js": "^4.4.6",
+    "date-fns": "^4.1.0",
     "firebase": "^11.0.1",
     "formik": "^2.4.6",
+    "lucide-react": "^0.462.0",
     "otp-input-react": "^0.3.0",
     "postcss": "^8.4.47",
     "razorpay": "^2.9.5",

@@ -3,7 +3,8 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { selectSelectedItems } from '../../redux/reducers/user/selectedItemsSlice';
 import { toast, ToastContainer } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate ,useLocation} from 'react-router-dom';
+import { baseURL } from '../../common/api';
 
 const Checkout = () => {
     const navigate = useNavigate();  
@@ -18,7 +19,10 @@ const Checkout = () => {
   const [isWalletUsed, setIsWalletUsed] = useState(false);
   const [isCouponApplied, setIsCouponApplied] = useState(false);
   const user = useSelector((state) => state.auth.user);
+  const location = useLocation();
 
+  const studentName = location.state?.studentName; 
+  
 
 const calculateTotal = () => {
     let total = 0;
@@ -45,21 +49,27 @@ const calculateTotal = () => {
     return total; 
   };
   const total = calculateTotal();
+
+  
   const handleApplyCoupon = async () => {
     try {
-      const response = await axios.post("https://monis-foods-backend.vercel.app/api/admin/coupons/validate", {
+      const response = await axios.post(`${baseURL}/api/admin/coupons/validate`, {
         code: couponCode,
+        userId: user, // Ensure 'user' contains the valid user ID
       });
-   
-      if (response.data.success) {
-        const { discountAmount, newWalletBalance } = response.data;
-        setDiscount(discountAmount);
-        setWalletBalance(response.data.walletBalance);
+  
+      const { message, discountAmount, walletBalance } = response.data;
+  
+      if (response.status === 200) {
+        setDiscount(discountAmount); // Update discount
+        setWalletBalance(walletBalance); // Update wallet balance
         setIsCouponApplied(true);
-        toast.success(`Coupon applied! ₹${discountAmount} added to wallet.`)
-       
+        toast.success(`Coupon applied! ₹${discountAmount} added to wallet.`);
+  
+        // Update totalAmount based on the new discount
+        setTotalAmount(calculateTotal(discountAmount));
       } else {
-        alert(response.data.message || "Invalid coupon.");
+        toast.error(message || "Invalid coupon.");
       }
     } catch (error) {
       console.error("Error applying coupon:", error);
@@ -68,9 +78,10 @@ const calculateTotal = () => {
   };
   
   
+  
   const handleShowCoupons = async () => {
     try {
-      const response = await axios.get("https://monis-foods-backend.vercel.app/api/admin/coupons");
+      const response = await axios.get(`${baseURL}/api/admin/coupons`);
       setAvailableCoupons(response.data);
     } catch (error) {
       console.error("Error fetching coupons:", error);
@@ -81,7 +92,7 @@ const calculateTotal = () => {
   useEffect(() => {
     const fetchWalletBalance = async () => {
       try {
-        const response = await axios.get(`https://monis-foods-backend.vercel.app/api/user/wallet/balance?userId=${user}`); 
+        const response = await axios.get(`${baseURL}/api/user/wallet/balance?userId=${user}`); 
         if (response.status === 200) {
           setWalletBalance(response.data.balance); 
         }
@@ -106,47 +117,45 @@ const calculateTotal = () => {
   
     setIsWalletUsed(true); 
   };
-  console.log("Selected Items:", selectedItems);
+ 
 
   
   const handleBooking = async (paymentDetails) => {
+    const totalAfterDiscount = calculateTotal() + (isWalletUsed ? walletBalance : 0); // Add back wallet balance deduction
+  
     const formattedItems = {
       breakfast: selectedItems.breakfast
         ? Object.keys(selectedItems.breakfast).map((itemName) => ({
             name: itemName,
             details: selectedItems.breakfast[itemName],
           }))
-        : [], // Return an empty array if no breakfast items are selected
+        : [],
       lunch: selectedItems.lunch
         ? Object.keys(selectedItems.lunch).map((itemName) => ({
             name: itemName,
             details: selectedItems.lunch[itemName],
           }))
-        : [], // Return an empty array if no lunch items are selected
+        : [],
       snack: selectedItems.snack
         ? Object.keys(selectedItems.snack).map((itemName) => ({
             name: itemName,
             details: selectedItems.snack[itemName],
           }))
-        : [], // Return an empty array if no snack items are selected
+        : [],
     };
-    
   
     const bookingData = {
-      // userName: 'John Doe',
-      // userEmail: 'john.doe@example.com',
-      // userPhone: '1234567890',
-      userId:user,
+      userId: user,
       meals: formattedItems,
-       totalAmount: calculateTotal(),
-     
+      totalAmount: totalAfterDiscount, // Send total after applying the discount
+      name: studentName,
       discount,
       walletBalanceUsed: isWalletUsed ? walletBalance : 0,
-      paymentDetails, 
+      paymentDetails,
     };
   
     try {
-      const response = await axios.post('https://monis-foods-backend.vercel.app/api/user/bookings', bookingData);
+      const response = await axios.post(`${baseURL}/api/user/bookings`, bookingData);
       toast.success('Booking Successful');
       navigate('/payment-success');
       console.log('Booking Response:', response.data);
@@ -155,13 +164,14 @@ const calculateTotal = () => {
       toast.error('Failed to create booking');
     }
   };
+  
   const handleRazorpayPayment = async () => {
     try {
       const totalAmount = calculateTotal();
   console.log(totalAmount);
   
       
-      const response = await axios.post('https://monis-foods-backend.vercel.app/api/user/create-order', {
+      const response = await axios.post(`${baseURL}/api/user/create-order`, {
         amount: totalAmount
       });
   
